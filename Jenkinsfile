@@ -5,7 +5,7 @@ pipeline {
         stage("Git Checkout") {
             steps {
                 echo "Cloning Git Repo"
-                git url: "https://github.com/InvincibleVicky/Finance-Me/"
+                git url: "https://github.com/InvincibleVicky/medicure_capstone_project/"
             }
         }
 
