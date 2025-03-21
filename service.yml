@@ -6,7 +6,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8084
+      targetPort: 8082
   selector:
     name: deployment
   type: NodePort
