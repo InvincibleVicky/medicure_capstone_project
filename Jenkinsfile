@@ -42,8 +42,8 @@ pipeline {
             }
         }
 
-       script {
-            kubernetesDeploy(configs: 'deployment.yml, service.yml', kubeconfigId: 'k8sconfigpwd')
+      stage('run') {
+            script { kubernetesDeploy(configs: 'deployment.yml, service.yml', kubeconfigId: 'k8sconfigpwd') }
         }
 
   }
