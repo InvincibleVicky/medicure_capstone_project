@@ -42,10 +42,13 @@ pipeline {
             }
         }
 
-         stage('Run') {
+        stage('Deploy to Kubernetes') {
             steps {
-                sh 'docker run -dt -p 8084:8082 --name c01 vigneshwar1908/medicure_healthcare:v1'
+                // Apply deployment and service files
+                sh 'kubectl apply -f deployment.yml'
+                sh 'kubectl apply -f service.yml'
             }
         }
+
   }
 }
