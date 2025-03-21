@@ -42,12 +42,8 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                // Apply deployment and service files
-                sh 'kubectl apply -f deployment.yml'
-                sh 'kubectl apply -f service.yml'
-            }
+       script {
+            kubernetesDeploy(configs: 'deployment.yml, service.yml', kubeconfigId: 'k8sconfigpwd')
         }
 
   }
