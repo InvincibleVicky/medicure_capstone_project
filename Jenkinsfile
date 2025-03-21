@@ -44,7 +44,7 @@ pipeline {
 
          stage('Run') {
             steps {
-                sh 'docker run -dt -p 8081:8081 --name c01 vigneshwar1908/medicure_healthcare:v1'
+                sh 'docker run -dt -p 8084:8082 --name c01 vigneshwar1908/medicure_healthcare:v1'
             }
         }
   }
