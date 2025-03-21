@@ -42,11 +42,20 @@ pipeline {
             }
         }
 
-      stage('run') {
-            steps { 
-                kubernetesDeploy(configs: 'deployment.yml, service.yml', kubeconfigId: 'k8sconfigpwd') 
-            }
-        }
+      stage('Deploy to Kubernetes') {
+    environment {
+        KUBECONFIG = credentials('k8sconfigpwd') // Reference the stored kubeconfig in Jenkins credentials
+    }
+    steps {
+        // Apply deployment and service files using kubeconfig
+        sh '''
+            export KUBECONFIG=$KUBECONFIG
+            kubectl apply -f deployment.yml
+            kubectl apply -f service.yml
+        '''
+    }
+}
+
 
   }
 }
