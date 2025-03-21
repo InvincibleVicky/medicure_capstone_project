@@ -41,5 +41,11 @@ pipeline {
                 sh 'docker push vigneshwar1908/medicure_healthcare:v1'
             }
         }
+
+         stage('Run') {
+            steps {
+                sh 'docker run -dt -p 8081:8081 --name c01 vigneshwar1908/medicure_healthcare:v1'
+            }
+        }
   }
 }
