@@ -1,1 +1,12 @@
-
+- name: Deploy to Kubernetes
+  hosts: localhost
+  tasks:
+    - name: Deploy Kubernetes resources
+      community.kubernetes.k8s:
+        state: present
+        definition: "{{ lookup('file', 'deployment.yml') | from_yaml }}"
+    
+    - name: Deploy Kubernetes service
+      community.kubernetes.k8s:
+        state: present
+        definition: "{{ lookup('file', 'service.yml') | from_yaml }}"
