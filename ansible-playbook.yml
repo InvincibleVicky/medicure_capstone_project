@@ -1,20 +1,70 @@
-- name : Configure Docker on EC2 Instances
-  hosts : all
-  become: true
-  connection : ssh
-  tasks : 
-  - name: updating apt
-    command : sudo apt-get update
+---
+- name: Kubernetes Master Installation
+  hosts: ansible_k8s_master
+  become: yes
+  tasks:
+    # Download the Kubernetes Master Script
+    - name: Download k8s master script
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/InvincibleVicky/Deployment-script/main/k8s-master.sh
+        dest: /root/k8s-master.sh
+        mode: 0755
 
-  - name : Install Docker
-    command : sudo apt-get install -y docker.io
-    become : yes
-    become_user : root
+    # Run the Kubernetes Master Script
+    - name: Run k8s master script
+      ansible.builtin.command: ./k8s-master.sh
+      args:
+        chdir: /root
 
-  - name : Start Docker Service
-    command : sudo systemctl start docker
-    become : yes
-    become_user : root
+    # Generate Join Token
+    - name: Generate kubeadm join command
+      ansible.builtin.command: kubeadm token create --print-join-command
+      register: join_command
 
-  - name: Deploy Docker Container
-    command: docker run -itd -p 8084:8082 shubhamkushwah123/medicure:1.0
+    - name: Save join command to a file
+      ansible.builtin.copy:
+        content: "{{ join_command.stdout }}"
+        dest: /root/join_command.txt
+
+- name: Kubernetes Nodes Installation
+  hosts: ansible_k8s_node
+  become: yes
+  tasks:
+    # Download the Kubernetes Node Script
+    - name: Download k8s nodes script
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/InvincibleVicky/Deployment-script/main/k8s-nodes.sh
+        dest: /root/k8s-nodes.sh
+        mode: 0755
+
+    # Run the Kubernetes Node Script
+    - name: Run k8s nodes script
+      ansible.builtin.command: ./k8s-nodes.sh
+      args:
+        chdir: /root
+
+    # Apply Network Configurations
+    - name: Enable bridge netfilter
+      ansible.builtin.shell: modprobe br_netfilter
+
+    - name: Enable bridge iptables
+      ansible.builtin.shell: echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
+
+    - name: Enable IP forwarding
+      ansible.builtin.shell: echo 1 > /proc/sys/net/ipv4/ip_forward
+
+- name: Connect Nodes to Master
+  hosts: nodes
+  become: yes
+  tasks:
+    # Fetch the join command from the master
+    - name: Fetch join command
+      ansible.builtin.fetch:
+        src: /root/join_command.txt
+        dest: /tmp/join_command.txt
+        flat: yes
+        delegate_to: master
+
+    # Join the Kubernetes Cluster
+    - name: Join Kubernetes cluster
+      ansible.builtin.shell: bash /tmp/join_command.txt
