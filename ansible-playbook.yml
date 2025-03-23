@@ -1,16 +1,12 @@
 ---
-- name: Deploy Kubernetes resources
-  hosts: all
-  gather_facts: false
-  tasks:
-    - name: Deploy Kubernetes Deployment
-      kubernetes.core.k8s:
-        kubeconfig: "/root/.kube/config"  # Adjust the path based on your setup
-        state: present
-        resource_definition: "{{ lookup('file', 'deployment.yml') }}"  # References your deployment.yml file
+- hosts: all
+  gather_facts: no  # Disable fact gathering for this task
 
-     - name: Deploy Kubernetes Deployment
-        kubernetes.core.k8s:
-          kubeconfig: "/root/.kube/config"  # Adjust the path based on your setup
-          state: present
-          resource_definition: "{{ lookup('file', 'service.yml') }}"  # References your deployment.yml file
+  tasks:
+    - name: Deploy Kubernetes deployment
+      kubernetes.core.k8s:
+        kubeconfig: "/root/.kube/config"  # Path to your kubeconfig file
+        namespace: "{{ namespace }}"          # Kubernetes namespace
+        manifest: "deployment.yml"  # Path to your deployment YAML file
+        user: "devops" # User to impersonate
+        state: present
