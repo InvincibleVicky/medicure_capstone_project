@@ -5,8 +5,6 @@
   tasks:
     - name: Deploy Kubernetes deployment
       kubernetes.core.k8s:
-        kubeconfig: "/root/.kube/config"  # Path to your kubeconfig file
-        namespace: "{{ namespace }}"          # Kubernetes namespace
-        manifest: "/var/lib/jenkins/workspace/medicure/deployment.yml"  # Path to your deployment YAML file
-        user: "devops" # User to impersonate
+        kubeconfig: "/root/.kube/config"  
+        configs: "/var/lib/jenkins/workspace/medicure/deployment.yml" 
         state: present
