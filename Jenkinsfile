@@ -42,15 +42,13 @@ pipeline {
             }
         }
 
-       stage('Deploy to k8s with Ansible') {
+       stage('Ansbile config and Deployment') {
             steps {
-                script {
-                    sh '''
-                    ansible-playbook -i /etc/ansible/hosts \
-                    --private-key /var/lib/jenkins/workspace/ssh_key.key \
-                    -u devops deployment.yml
-                    '''
-                }
+                ansiblePlaybook credentialsId: 'ansible-ssh',
+                    disableHostKeyChecking: true,
+                    installation: 'ansible',
+                    inventory: '/etc/ansible/hosts', 
+                    playbook: 'ansible-playbook.yml', vaultTmpPath: ''
             }
         }
 
