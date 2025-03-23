@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: ansiblegroup
   gather_facts: no  # Disable fact gathering for this task
 
   tasks:
