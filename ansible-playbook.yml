@@ -3,8 +3,9 @@
   hosts: all
   gather_facts: false
   vars:
+    kubeconfig: k8sconfigpwd
     kubeconfig_file: ~/.kube/config
-    namespace_name: app-ns
+    namespace_name: app-medicure
   tasks:
     - name: Create a k8s namespace
       kubernetes.core.k8s:
