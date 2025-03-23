@@ -16,10 +16,33 @@ pipeline {
             }
         }
 
+         stage("Test the Code") {
+            steps {
+                echo "Starting Testing"
+                sh "mvn test"
+            }
+        }
+
+        stage("QA of the Code") {
+            steps {
+                echo "Starting Compilation"
+                sh "mvn checkstyle:checkstyle"
+            }
+        }
+
          stage("Create a Package") {
             steps {
                 echo "Packaging Application"
                 sh "mvn package"
+            }
+        }
+
+        stage('Publish the HTML Reports') {
+             steps {
+              publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, 
+                       reportDir: '/var/lib/jenkins/workspace/insure-me/target/surefire-reports',
+                       reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', 
+                       useWrapperFileDirectly: true])
             }
         }
 
