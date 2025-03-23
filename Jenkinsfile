@@ -42,11 +42,18 @@ pipeline {
             }
         }
 
-        stage('Deploy to k8s'){
-            steps{
-                     kubernetesDeploy (configs: 'deployment.yml, service.yml' ,kubeconfigId: 'k8sconfigpwd')
+       stage('Deploy to k8s with Ansible') {
+            steps {
+                script {
+                    sh '''
+                    ansible-playbook -i /etc/ansible/hosts \
+                    --private-key /var/lib/jenkins/workspace/ssh_key.key \
+                    -u devops deploy_k8s.yml
+                    '''
+                }
             }
         }
+
 
   }
 }
