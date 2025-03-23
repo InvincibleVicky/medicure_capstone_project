@@ -3,19 +3,10 @@
   hosts: localhost
   vars:
     kubeconfig: k8sconfigpwd
-    deployment_config: deploymentservice.yaml
-    git_branch: master
+    configs:
+      - deployment.yml
+      - service.yml
   tasks:
-    - name: Check if current branch is master
-      command: git rev-parse --abbrev-ref HEAD
-      register: git_branch_result
-
-    - name: Deploy to Kubernetes if on master branch
-      block:
-        - name: Set kubeconfig environment variable
-          set_fact:
-            kubeconfig_path: "{{ kubeconfig }}"
-        
-        - name: Apply Kubernetes deployment
-          command: kubectl apply -f {{ deployment_config }} --kubeconfig={{ kubeconfig_path }}
-      when: git_branch_result.stdout == git_branch
+    - name: Apply Kubernetes configurations
+      command: kubectl apply -f {{ item }} --kubeconfig={{ kubeconfig }}
+      loop: "{{ configs }}"
