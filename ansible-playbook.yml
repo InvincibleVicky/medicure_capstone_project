@@ -1,16 +1,15 @@
 ---
-- name: Deploy Kubernetes resources
-  hosts: all
+- hosts: all
   gather_facts: false
   tasks:
-    - name: Deploy Deployment YAML
+    - name: Deploy Kubernetes Deployment
       kubernetes.core.k8s:
-        kubeconfig: "/root/.kube/config"
         state: present
-        resource_definition: "{{ lookup('file', 'deployment.yml') }}"
+        manifest: "deployment.yml"
+        kubeconfig: "/root/.kube/config"
 
-    - name: Deploy Service YAML
+     - name: Deploy Kubernetes Deployment
       kubernetes.core.k8s:
-        kubeconfig: "/root/.kube/config"
         state: present
-        resource_definition: "{{ lookup('file', 'service.yml') }}"
+        manifest: "service.yml"
+        kubeconfig: "/root/.kube/config"
