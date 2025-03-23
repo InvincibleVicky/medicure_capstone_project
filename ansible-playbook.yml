@@ -5,12 +5,12 @@
   tasks:
     - name: Deploy Kubernetes Deployment
       kubernetes.core.k8s:
-        kubeconfig: "/root/.kube/config"  # Path to your kubeconfig file
+        kubeconfig: "/root/.kube/config"  # Adjust the path based on your setup
         state: present
-        resource_definition: "{{ lookup('file', 'deployment.yml') }}"  # Refers to your deployment file
+        resource_definition: "{{ lookup('file', 'deployment.yml') }}"  # References your deployment.yml file
 
-    - name: Deploy Kubernetes Deployment
-      kubernetes.core.k8s:
-        kubeconfig: "/root/.kube/config"  # Path to your kubeconfig file
-        state: present
-        resource_definition: "{{ lookup('file', 'service.yml') }}"  # Refers to your deployment file
+     - name: Deploy Kubernetes Deployment
+        kubernetes.core.k8s:
+          kubeconfig: "/root/.kube/config"  # Adjust the path based on your setup
+          state: present
+          resource_definition: "{{ lookup('file', 'service.yml') }}"  # References your deployment.yml file
