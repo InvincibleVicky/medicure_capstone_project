@@ -1,19 +1,29 @@
 ---
-- name: Configure Docker on EC2 Instances
+- name: Deploying Application to Kubernetes
   hosts: all
-  become: true
+  gather_facts: false
+  vars:
+    kubeconfig_file: ~/.kube/config
+    namespace_name: app-ns
   tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
-
-    - name: Install Docker
-      apt:
-        name: docker.io
+    - name: Create a k8s namespace
+      kubernetes.core.k8s:
+        kubeconfig: "{{ kubeconfig_file }}"
+        name: "{{ namespace_name }}"
+        api_version: v1
+        kind: Namespace
         state: present
 
-    - name: Start and enable Docker service
-      service:
-        name: docker
-        state: started
-        enabled: yes
+    - name: Create Deployment
+      kubernetes.core.k8s:
+        kubeconfig: "{{ kubeconfig_file }}"
+        state: present
+        src: deployment.yml
+        namespace: "{{ namespace_name }}"
+
+    - name: Expose application on NodePort
+      kubernetes.core.k8s:
+        kubeconfig: "{{ kubeconfig_file }}"
+        state: present
+        src: service.yml
+        namespace: "{{ namespace_name }}"
