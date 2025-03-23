@@ -42,15 +42,10 @@ pipeline {
             }
         }
 
-       stage('Ansbile config and Deployment') {
-            steps {
-                ansiblePlaybook credentialsId: 'ansible-ssh',
-                    disableHostKeyChecking: true,
-                    installation: 'ansible',
-                    inventory: '/etc/ansible/hosts', 
-                    playbook: 'ansible-playbook.yml', vaultTmpPath: ''
+       stage('Deploy to k8s'){
+            steps{
+                kubernetesDeploy (configs: 'deployment.yml, service.yml' ,kubeconfigId: 'k8sconfigpwd')
             }
         }
-
   }
 }
