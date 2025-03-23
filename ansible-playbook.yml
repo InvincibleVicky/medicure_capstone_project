@@ -1,10 +1,12 @@
 ---
-- hosts: ansiblegroup
-  gather_facts: no  # Disable fact gathering for this task
-
+- name: Deploy Kubernetes deployment
+  hosts: ansiblegroup
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
   tasks:
-    - name: Deploy Kubernetes deployment
+    - name: Deploy Kubernetes resources
       kubernetes.core.k8s:
-        kubeconfig: "/root/.kube/config"  
-        configs: "/var/lib/jenkins/workspace/medicure/deployment.yml" 
+        kubeconfig: "/root/.kube/config"
         state: present
+        resource_definition: "{{ lookup('file', 'deployment.yml') }}"
