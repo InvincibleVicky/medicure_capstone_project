@@ -2,7 +2,7 @@
 - name: Deploy to Kubernetes
   hosts: localhost
   vars:
-    kubeconfig: k8sconfigpwd
+    
     configs:
       - deployment.yml
       - service.yml
