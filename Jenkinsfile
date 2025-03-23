@@ -48,7 +48,7 @@ pipeline {
                     sh '''
                     ansible-playbook -i /etc/ansible/hosts \
                     --private-key /var/lib/jenkins/workspace/ssh_key.key \
-                    -u devops deploy_k8s.yml
+                    -u devops deployment.yml
                     '''
                 }
             }
