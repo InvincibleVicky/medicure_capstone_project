@@ -1,12 +1,9 @@
 ---
-- name: Deploy to Kubernetes
-  hosts: localhost
-  vars:
-    
-    configs:
-      - deployment.yml
-      - service.yml
+- hosts: all
+  gather_facts: false
   tasks:
-    - name: Apply Kubernetes configurations
-      command: kubectl apply -f {{ item }} --kubeconfig={{ kubeconfig }}
-      loop: "{{ configs }}"
+    - name: Deploy Kubernetes Deployment
+      kubernetes.core.k8s:
+        state: present
+        manifest: "deployment.yml"
+        kubeconfig: "/root/.kube/config"
