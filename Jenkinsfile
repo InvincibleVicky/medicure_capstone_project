@@ -23,7 +23,7 @@ pipeline {
             }
         }
 
-        stage('Create a Docker image from the Package Insure-Me.jar file') {
+        stage('Create a Docker image from the Package medicure.jar file') {
             steps {
                 sh 'docker build -t vigneshwar1908/medicure_healthcare:v1 .'
             }
